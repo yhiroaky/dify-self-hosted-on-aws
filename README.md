@@ -27,7 +27,7 @@ For a quick and convenient deployment, you can use the one-click deployment opti
 ## Prerequisites
 You must have the following dependencies installed to deploy this app:
 
-* [Node.js](https://nodejs.org/en/download/) (v20 or newer)
+* [Node.js](https://nodejs.org/en/download/) (v22 or newer)
 * [Docker](https://docs.docker.com/get-docker/)
 * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) and IAM profile with Administrator policy
 
@@ -128,7 +128,7 @@ The below are the list of configurable parameters and their default values:
 
 1. ECS Task ([api.ts](./lib/constructs/dify-services/api.ts), [web.ts](./lib/constructs/dify-services/web.ts))
     1. Size
-        1. api/worker: 1024vCPU / 2048MB
+        1. api/worker: 1024vCPU / 4096MB (configurable via `apiServiceCpu` / `apiServiceMemoryLimitMiB`)
         2. web: 256vCPU / 512MB
     2. Desired Count
         1. 1 task for each service
@@ -306,13 +306,13 @@ The following table provides a sample cost breakdown for deploying this system i
 | --------------------| ----------------- | -------------------------------|
 | RDS Aurora | Postgres Serverless v2 (0 ACU) | $0 |
 | ElastiCache | Valkey t4g.micro | $9.2 |
-| ECS (Fargate) | Dify-web 1 task running 24/7 (256CPU) | $2.7 |
-| ECS (Fargate) | Dify-api/worker 1 task running 24/7 (1024CPU) | $10.7 |
+| ECS (Fargate) | Dify-web 1 task running 24/7 (256CPU / 512MB) | $2.7 |
+| ECS (Fargate) | Dify-api/worker 1 task running 24/7 (1024CPU / 4096MB) | $12.6 |
 | Application Load Balancer | ALB-hour per month | $17.5 |
 | VPC | NAT Instances t4g.nano x1 | $3.0 |
 | VPC | Public IP address x1 | $3.6 |
 | Secrets Manager | Secret x3 | $1.2 |
-| TOTAL | estimate per month | $47.9 |
+| TOTAL | estimate per month | $49.8 |
 
 Note that you have to pay LLM cost (e.g. Amazon Bedrock ) in addition to the above, which totally depends on your specific use case.
 
